@@ -1,0 +1,333 @@
+1.mysql的基本命令
+   1.启动mysql服务
+   格式: net start 服务名
+   例:  net start mysql57
+   请求的服务已经启动, 表示请求成功
+
+   2.关闭服务
+    格式: net  stop  服务名
+    例: net stop mysql57
+
+   3.连接mysql服务器,登陆
+    格式: mysql -u root -p
+
+   4.查看当前mysql的版本
+     格式:select version();
+
+   5.查看当前的时间
+     格式: select now();
+
+   6.远程登陆
+     格式:mysql -h ip地址 -u root -p
+
+   7.退出
+     quit,exit
+
+2.数据库的操作命令
+    1.查看所有的库
+      格式: show databases;
+    2.创建一个数据库
+      格式: create database 数据库名  charset=utf8;
+
+    3.删除数据库
+      格式:drop database 数据库名;
+
+    4.使用某个数据
+      格式:use 数据库名;
+
+    5.查看当前使用的数据库名字
+      格式: select database();
+
+3.数据库表的操作  
+    1.查看当前库下的所有的表
+      格式:show tables;
+
+    2.创建一个表
+      格式: create table 表名(数据列名)
+      例:create table student(id int auto_increment primary key,name varchar(20) not null,age int,address varchar(20) not null,gender bit default 0);
+   3.查看表的结构
+     格式:desc 表名
+   4.查看表的创建语句
+   格式: show create table 表名;
+   
+   5.删除该表
+     格式:drop table 表名;
+
+   6.修改表
+     1.修改表的名字
+     格式: rename table 旧表名 to 新表名;
+     2.修改表的结构
+     格式: alter table 表名 add|drop|change
+     添加:格式:  alter table 表名 add 数据列名 数据类型
+    删除:格式:  alter table 表名 drop  列名
+     修改:格式:  alter table 表名 change  旧的列名  新的列名 新列名的类型
+  
+4.表中数据的操作   
+        1.添加数据
+		1.全列插入
+		格式:  insert into 表名 values(全列的值)
+		#注意: 第一列自动增加的主健, 直接写0 就可以
+		例:insert into students values(0,"习大大",48,"北京",1)
+		
+		2.缺省插入
+		格式: insert into 表名(要插入的列名)  values(与列名对应的值)
+		例: insert into students(name,age,address) values("hanmeimei",18,"深圳");
+		
+		3.插入多条数据
+		格式: insert into 表名 values(值),(值),(值)
+		例: insert into students values(0,"张三",19,"上海",1),(0,"李四",17,"广州",0),(0,"王麻子",21,"广州",1);
+
+	2.删除数据
+		格式: delete from 表名 where  条件
+		例: delete from students where id = 5;
+		注意:delete from students 删除所有数据,谨慎使用
+
+	3.修改数据
+		格式:update 表名 set 列名1=修改的值,列名2=修改的值  where  条件
+		例: update students set name = "王五",age = 20 where id = 4;
+
+	4.查询所有数据
+		select * from students;
+
+5.查询
+	1、基本语法
+		格式:  select 列名1,列名2...  from 表名 where 条件;  
+		0.select 后面还可以跟上聚合函数
+		1.select 后面跟的是要查询的列的列名
+		2. *  表示查询所有的列
+		3.from 后面是要查询的表的表名
+		4.where 后面是查询条件
+		5. 列名 as 新列名  可以给列取别名
+		
+		例: 
+		需求1: 获取所有的数据
+		select * from students  
+		需求2:  只获得 name, age
+		select name,age from students;
+		需求3: 给name 取别名为  姓名
+		select name as 姓名 from students;
+             
+	2、消除重复行
+	    格式: select distinct 列名 from  表名 where 条件
+	    例: select distinct gender from students;
+	       
+	3、条件查询
+		a、语法
+		   slect 列名1,列名2...  from 表名 where 条件;
+		b、比较运算符
+		    =  等号
+		    <  小于号
+		    >  大于号
+		    <=  小于等于
+		    >=  大于等于	
+		    !=或者<>  不等于
+		    需求: 获取小于20的
+		    select * from students where age < 20;
+		    需求: 不等于20的
+		    select * from students where age <> 20;
+		    select * from students where age != 20;
+		    
+		    
+		    
+
+		c、逻辑运算符
+		   and  且
+		   or   或者
+		   not  非
+		 
+		   需求: 大于18 且 小于 22
+		   例: select * from students where age >18 and age < 22;
+		   非:	非 (大于18 且 小于 22)
+		 <!-- 可以使用括号,来提高优先级 -->
+		    select * from students where not (age >18 and age < 22);
+		   
+		d、模糊查询
+			格式: select * from 表名 where 列名 like 匹配字符
+			  like
+			  %代表多个任意字符
+			  _代表一个任意字符
+			
+			  插入:  
+			例: insert into students values(0,"习近平",19,"上海",1),(0,"习巴巴",17,"广州",0),(0,"王麻子",21,"广州",1);
+			  例:查找出所有姓习的人
+			select * from students where name like "习%";
+			select * from students where name like "王_"; 
+		e、范围查询
+			   in (值1,值2)   in表示非连续的数, 也就是 是值1或者值2
+			  
+			   between  值1 and 值2  表示连续的数, 值1 到 值2范围,包括边界
+
+			   例:select * from students where age in (18,48);
+			   例: select * from students where age between 18 and 20;
+		f、空判断
+
+		    is null判断是否是空
+		    is not null 判断非空
+	
+		    需求: 判断address 是否为空
+		    例:
+		    select * from students where address is null;
+		    select * from students where address is not null;
+		   
+		g、优先级
+		  (), not ,比较运算符,and,or
+		   
+	 4、聚合
+	      count(*)  表示查询结果一共有多少行
+	      max(列名)  求该列中的最大值
+	      min(列名)  求该列中的最小值
+	      sum(列名)  求该列中所有数据的和
+	      avg(列名)  求该列中的所有数的平均值
+		
+	     例: select count(*)  from students;
+		 select max(age)  from students;
+		 select sum(age)  from students;
+		 select avg(age)  from students;
+
+	 5、分组 
+	   格式: select *  from 表名 group by  列名
+	   需求: 分为男,女两组
+	   例: select *  from students group by gender;
+	   
+	   需求: 求男生,女生有多少人
+	   例: select gender,count(*) from students group by gender;
+
+	   需求:只查询出女生有多少人
+	   例: select gender,count(*) from students group by gender having gender = 0;
+
+
+	<!-- 注意having的使用 -->
+	   where 条件,第一步查询的筛选条件
+	   having 条件,是在查询结果上继续筛选
+
+
+         6、排序
+		格式: select * from 表名 order by 列名1 排序方式;
+		默认是升序,
+		asc  升序
+		desc 降序
+
+		
+		例:select * from students order by age;
+		select * from students order by age desc;
+		select * from students order by 成绩 desc,age desc;
+	       	
+	       
+	 7、分页 
+	    格式: select * from 表名 where 条件 limit 值1,值2
+	          值1:表示开的行数   
+		  值2:多少行数据
+	    例: select * from students limit 0,3; 
+
+6.表关联 
+      1.设计2个表
+         1.班级表 class
+	    create table class(id int auto_increment primary key,className varchar(20) not null);
+	 2.学生表 students
+	    create table student(id int auto_increment primary key,name varchar(20) not null,age int not null,address varchar(20) not null,classId int not null,foreign key(classId) references class(id));
+
+	    外键关联格式: foreign key(外键名) references 外表名(关联字段名)
+      2.插入数据
+         1.班级表插入
+	  insert into class values(0,"python01"),(0,"python02"),(0,"python03"),(0,"java01"),(0,"java02"),(0,"h501");
+        2.学生表中插入数据
+	  insert into student values(0,"张三",18,"北京",1);
+	  insert into student values(0,"李四",19,"北京",1);
+	  insert into student values(0,"王麻子",20,"北京",3);
+	  insert into student values(0,"三胖子",21,"北京",2);
+
+	  <!-- 注意:外键关联的字段不在外表时,插入不进去 -->
+	  insert into student values(0,"奥斑马",21,"美国",8);
+     
+     3.关联查询
+        需求: 查学生在那个班级 ?   
+	<!-- 内连接 -->
+	格式: select 表名x.列名,表名y.列名...  from  表名x  inner join 表名y   on  条件
+	例: select student.name,class.className from student inner join class on student.classId = class.id;
+
+	表A与表B关联,使用 inner join
+	会匹配表A与表B的数据,并显示
+
+        左连接
+	例: select student.name,class.className from class left join student on student.classId = class.id;
+	表A与表B关联,使用 A left join B
+	会匹配表A与表B的数据,并还显示表A中多余的数据, 多余的数据没有匹配上的数据用  NULL来填充
+	
+
+	右连接
+	select student.name,class.className from  student right join class on student.classId = class.id;
+
+	表的对应关系： 一对多 :
+					一对一：
+					多对多：
+	foreign key(外键名--需要关联的列名) references 外表名（关联字段名） 
+	
+	
+	
+	select * from
+(
+ select top 100 * from Detailed where zdname like'%为%'
+ union all
+ select top 100 * from Detailed1 where zdname like'%为%'
+ union all
+ select top 100 * from Detailed2 where zdname like'%为%'
+) tmp
+order by zdname desc; 
+#　查询多个结构相同的表的数据然后　合并显示　
+#  关键字 ： union all  要求多个表列名一样，查询结果以行为单位拼接合并
+
+
+内链接查询： INNER JOIN 
+查询结构不同的表的数据示例：
+ SELECT Students.ID,Students.Name,Majors.Name AS MajorName
+FROM Students INNER JOIN Majors
+ON Students.MajorID = Majors.ID
+#　查询并显示Student表的ID，Name列，Majoirs的Name列，从这两张表中，当着两个表的 ID 列相等的时候
+
+外链接查询有 三种，左连接，LEFT ，右连接，RIGHT， 和 全链接，FULL   / OUT JOIN
+
+左连接： 左表全部显示，右表没有匹配的填充为 NULL 
+	语法： SELECT 表名1.列名1，表名2.列名2 FROM 表名1 
+			LEFT JOIN 表名2 ON 表名1.匹配列=表名2.匹配列 
+		# 没有匹配的用NULL 填充
+右连接 ：右表的全部显示，没匹配的填充NULL
+	语法： ELECT 表名1.列名1，表名2.列名2 FROM 表名1 
+			right JOIN 表名2 ON 表名1.匹配列=表名2.匹配列
+		#保留右表的所有行，至保留左表的匹配行，没有匹配的列数据用
+		
+		＃　ｎｕｌｌ填充
+		
+全连接: FULL  OUT JOIN 显示两个表的所有行
+    语法： SELECT Students.ID,Students.Name,Majors.Name AS MajorName
+FROM Students FULL JOIN Majors
+ON Students.MajorID = Majors.ID
+
+交叉连接： CROSS JOIN（交叉连接）
+
+
+可以。注意：where肯定在group by 之前。
+
+一，group by 字句也和where条件语句结合在一起使用。当结合在一起时，where在前，group by 在后。即先对select xx from xx的记录集合用where进行筛选，然后再使用group by 对筛选后的结果进行分组 使用having字句对分组后的结果进行筛选。
+
+二，需要注意having和where的用法区别：
+
+having只能用在group by之后，对分组后的结果进行筛选(即使用having的前提条件是分组)。
+
+where肯定在group by 之前。
+
+3.where后的条件表达式里不允许使用聚合函数，而having可以。
+三，当一个查询语句同时出现了where,group by,having,order by的时候，执行顺序和编写顺序是：
+
+1.执行where xx对全表数据做筛选，返回第1个结果集。
+
+2.针对第1个结果集使用group by分组，返回第2个结果集。
+
+3.针对第2个结果集中的每1组数据执行select xx，有几组就执行几次，返回第3个结果集。
+
+4.针对第3个结集执行having xx进行筛选，返回第4个结果集。
+
+5.针对第4个结果集排序。
+
+
+	
+	

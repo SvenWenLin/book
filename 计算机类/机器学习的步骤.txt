@@ -1,0 +1,67 @@
+1 导入相关包，模块，类，函数等
+2 读取数据，对数据浏览，清洗，预处理，使其成为可以用来机器血写。
+3 数据拆分，拆分为 训练集，训练目标，测试集，测试目标 四部分 。也可以自定义来拆分
+    示例：假设初始数据为 data 初始目标数据为 targe
+    from sklearn.mode_selection import train_test_split
+    # 导入用于数据拆分的 函数
+    X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.3, random_state=42)
+    # X_train : 训练数据 
+      X_test : 从data中拆分出来的测试数据
+      y_train: 从target 中拆分出来的 训练目标数据
+      y_test : 从target 中拆分出来的 测试目标数据                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+      
+      
+4 声明算法： 根据问题，目标，数据，选择合适的算法。
+            实例化 算法对象的 类，并设置相关参数
+       示例：
+       from sklearn import neighbors
+       #定义kNN分类模型
+       model1 = neighbors.KNeighborsClassifier(n_neighbors=5, n_jobs=1) # 分类
+       model2 = neighbors.KNeighborsRegressor(n_neighbors=5, n_jobs=1) # 回归
+       model1 声明里 knn 分类算法 ，也就说实例化里一个knn 分类算法的 对象
+       model2 声明里 knn回归算法，也就是说，实例化里一个knn 回归算法的对象
+       其他的算法也的声明也是类似。
+       声明的时候，有很多参数，需要有较强的数学功底，才能对这些参数有深刻理解。
+       
+5 训练模型  fit(X_train,y_train)
+        将数据喂给声明好的算法模型，进行训练。
+        语法：
+            model1.fit(X_train,y_train)
+            # 利用数据 对模型进行训练 ，训练完成后，model1 这个对象就是训练完成后的对象了
+            
+          
+6 利用训练好的模型对数据进行测试。 predict(X_test)
+       语法：y_ = model1.predict(X_test)
+             y_  是 利用训练好的模型 对 数据X_test 进行计算后得到的结果数据
+             
+
+7 模型的评估 与 参数 优化  score(datax,x_target) 
+        model1.score(datax,x_target)  # 返回模型1对这个datax 测试数据的一个准确率
+        交叉验证，画图检验找出最优的参数等等方式
+        
+8 利用优化好的参数重新定义模型，重新训练
+
+9 保存训练好的模型：
+    1 采用python自带 pickle 模块保存对象（python一切都是对象）,下次要用，直接读取这个文件即可。
+       import pickle
+       with open('model1','wb') as f:
+           pickle.dump(model1,f)
+           # 将训练好的模型保存到了当前目录下的 model1 文件中
+        
+        # 读取模型使用
+        with open('model1','rb') as f:
+            model1 = pickle.load(f)
+        #model1 是上次已经训练好的模型里，可以直接使用：
+            y_ = model1.predict(X_test)
+            
+      2 使用sklearn  方法保存模型：
+          from sklearn.externals import joblib
+          joblib.dump(model1,'model1.pickle') # 这个为猜测底层也是封装里 pickle 方法 来实现
+                                              # 将训练好的模型 model1 保存再当前目录下的 model1.pickle 文件中
+          
+          # 载入模型
+          model1 = joblib.load('model1.pickle') # 读取model1.pickle 中 的模型
+          # 接下来可以直接对这个模型进行使用了
+        
+      
+            
